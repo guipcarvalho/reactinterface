@@ -1,8 +1,9 @@
 import { BiSearch, BiCaretDown, BiCheck } from "react-icons/bi";
 import { useState } from "react";
 
-const Search = () => {
+const Search = ({ query, onQueryChange }) => {
   const [toggleSort, setToggleSort] = useState(false);
+
   return (
     <div className="py-5">
       <div className="mt-1 relative rounded-md shadow-sm">
@@ -12,9 +13,10 @@ const Search = () => {
         </div>
         <input
           type="text"
+          onChange={(event) => onQueryChange(event.target.value)}
           name="query"
           id="query"
-          value=""
+          value={query}
           className="pl-8 rounded-md focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300"
           placeholder="Search"
         />

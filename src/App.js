@@ -6,6 +6,15 @@ import AppointmentInfo from "./components/AppointmentInfo";
 
 function App() {
   const [appointments, setAppointments] = useState([]);
+  const [query, setQuery] = useState("");
+
+  const filteredAppointments = appointments.filter((item) => {
+    return (
+      item.petName.toLowerCase().includes(query.toLowerCase()) ||
+      item.ownerName.toLowerCase().includes(query.toLowerCase()) ||
+      item.aptNotes.toLowerCase().includes(query.toLowerCase())
+    );
+  });
 
   const fetchData = useCallback(() => {
     fetch("./data.json")
@@ -26,10 +35,10 @@ function App() {
         Your appointments
       </h1>
       <AddAppointment />
-      <Search />
+      <Search query={query} onQueryChange={(q) => setQuery(q)} />
 
       <ul className="divide-y divide-gray-200">
-        {appointments.map((appointment) => (
+        {filteredAppointments.map((appointment) => (
           <AppointmentInfo
             key={appointment.id}
             appointment={appointment}

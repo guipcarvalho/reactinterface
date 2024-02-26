@@ -43,7 +43,13 @@ function App() {
         <BiCalendar className="inline-block text-red-400 align-top" />
         Your appointments
       </h1>
-      <AddAppointment />
+      <AddAppointment
+        lastId={appointments.reduce(
+          (max, item) => (Number(item.id) > max ? Number(item.id) : max),
+          0
+        )}
+        onSendAppointment={(appt) => setAppointments([...appointments, appt])}
+      />
       <Search
         query={query}
         onQueryChange={(q) => setQuery(q)}

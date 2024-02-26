@@ -7,14 +7,23 @@ import AppointmentInfo from "./components/AppointmentInfo";
 function App() {
   const [appointments, setAppointments] = useState([]);
   const [query, setQuery] = useState("");
+  const [sortBy, setSortBy] = useState("petName");
+  const [orderBy, setOrderBy] = useState("asc");
 
-  const filteredAppointments = appointments.filter((item) => {
-    return (
-      item.petName.toLowerCase().includes(query.toLowerCase()) ||
-      item.ownerName.toLowerCase().includes(query.toLowerCase()) ||
-      item.aptNotes.toLowerCase().includes(query.toLowerCase())
-    );
-  });
+  const filteredAppointments = appointments
+    .filter((item) => {
+      return (
+        item.petName.toLowerCase().includes(query.toLowerCase()) ||
+        item.ownerName.toLowerCase().includes(query.toLowerCase()) ||
+        item.aptNotes.toLowerCase().includes(query.toLowerCase())
+      );
+    })
+    .sort((a, b) => {
+      let order = orderBy === "asc" ? 1 : -1;
+      return a[sortBy].toLowerCase() < b[sortBy].toLowerCase()
+        ? -1 * order
+        : 1 * order;
+    });
 
   const fetchData = useCallback(() => {
     fetch("./data.json")
@@ -35,7 +44,14 @@ function App() {
         Your appointments
       </h1>
       <AddAppointment />
-      <Search query={query} onQueryChange={(q) => setQuery(q)} />
+      <Search
+        query={query}
+        onQueryChange={(q) => setQuery(q)}
+        sortBy={sortBy}
+        onSortByChange={(criteria) => setSortBy(criteria)}
+        orderBy={orderBy}
+        onOrderByChange={(order) => setOrderBy(order)}
+      />
 
       <ul className="divide-y divide-gray-200">
         {filteredAppointments.map((appointment) => (
